@@ -31,8 +31,8 @@
                                                 <p class="card-text">
 
                                                     <a class="btn btn-primary float-right"
-{{--                                                       href="{{ route('questions.show', ['id' => $question->id]) }}">--}}
-                                                            href ="#">
+                                                       href="{{ route('question.show', ['id' => $question->id]) }}">
+{{--                                                            href ="#">--}}
                                                         View
                                                     </a>
                                                 </p>
