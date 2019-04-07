@@ -22,7 +22,7 @@
 </head>
 <body>
 <div id="app">
-    <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+    <nav class="navbar navbar-expand-md navbar-light navbar-laravel"  style="background-color: #1d2124; color: #fefefe">
         <div class="container">
 
 
@@ -31,7 +31,7 @@
                     {{ config('app.name', 'Laravel') }}
                 </a>
             @else
-                <a class="navbar-brand" href="{{ route('home') }}">
+                <a class="navbar-brand" style="color: #fefefe" href="{{ route('home') }}">
                     Home
                 </a>
             @endguest
@@ -51,13 +51,13 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
-                    <!-- Authentication Links -->
-                    @guest
+                    <!-- Authentication Links -->                    @guest
+
                         <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
                         <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
                     @else
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" style="color: #fefefe" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 My Account <span class="caret"></span>
                             </a>
 

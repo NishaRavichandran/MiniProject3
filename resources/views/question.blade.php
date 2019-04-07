@@ -5,14 +5,14 @@
         <div class="row ">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Question</div>
+                    <div class="card-header" style="background-color: #1d2124; color: #f8fafc; font-size: large">Question</div>
 
                     <div class="card-body">
 
                         {{$question->body}}
                     </div>
                     <div class="card-footer">
-                        <a class="btn btn-primary float-right"
+                        <a class="btn btn-primary float-right" style="background-color: mediumblue"
                            href="{{ route('question.edit',['id'=> $question->id])}}">
                             Edit Question
                         </a>
@@ -27,7 +27,7 @@
 
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-header"><a class="btn btn-primary float-left"
+                    <div class="card-header"><a class="btn btn-primary float-left" style="background-color: mediumblue"
                                                 href="{{ route('answers.create', ['question_id'=> $question->id])}}">
                             Answer Question
                         </a></div>
@@ -38,7 +38,7 @@
                                 <div class="card-body">{{$answer->body}}</div>
                                 <div class="card-footer">
 
-                                    <a class="btn btn-primary float-right"
+                                    <a class="btn btn-primary float-right" style="background-color: mediumblue"
                                        href="{{ route('answers.show', ['question_id'=> $question->id,'answer_id' => $answer->id]) }}">
 {{--                                            href="#">--}}
                                         View
