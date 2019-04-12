@@ -133,85 +133,85 @@ class QuestionController extends Controller
     public function vote(Request $request)
     {
         $userId = $request['userId'];
-        $questionsId = $request['questionsId'];
+        $questionId = $request['questionId'];
         $voteType = $request['voteType'];
         $token = $request['_token'];
 
         // query below returns vote_type('up' or 'down') or null
         $vote = DB::table('votes')->where([
             ['user_id', "=", $request['userId']],
-            ['questions_id', "=", $request['questionsId']]
+            ['question_id', "=", $request['questionId']]
         ])->value('vote_type');
 
         // if user didn't vote
         if (!$vote) {
             DB::table('votes')->insert([
-                'questions_id' => $questionsId,
+                'question_id' => $questionId,
                 'user_id' => $userId,
                 'vote_type' => $voteType
             ]);
-            $questions = Question::find($questionsId);
+            $question = Question::find($questionId);
             if ($voteType == "up") {
-                $questionsVotesUp = $questions->votes_up;
-                $questionsVotesUp = $questionsVotesUp + 1;
-                $questions->votes_up = $questionsVotesUp;
-                $questionsVotesDown = $questions->votes_down;
-                $result = $questionsVotesUp - $questionsVotesDown;
-                $questions->result = $result;
-                $questions->update();
+                $questionVotesUp = $question->votes_up;
+                $questionVotesUp = $questionVotesUp + 1;
+                $question->votes_up = $questionVotesUp;
+                $questionVotesDown = $question->votes_down;
+                $result = $questionVotesUp - $questionVotesDown;
+                $question->result = $result;
+                $question->update();
             } else {
-                $questionsVotesDown = $questions->votes_down;
-                $questionsVotesDown = $questionsVotesDown + 1;
-                $questions->votes_down = $questionsVotesDown;
-                $questionsVotesUp = $questions->votes_up;
-                $result = $questionsVotesUp - $questionsVotesDown;
-                $questions->result = $result;
-                $questions->update();
+                $questionVotesDown = $question->votes_down;
+                $questionVotesDown = $questionVotesDown + 1;
+                $question->votes_down = $questionVotesDown;
+                $questionVotesUp = $question->votes_up;
+                $result = $questionVotesUp - $questionVotesDown;
+                $question->result = $result;
+                $question->update();
             }
-            $result = $questions->votes_up - $questions->votes_down;
-            $up = $questions->votes_up;
-            $down = $questions->votes_down;
+            $result = $question->votes_up - $question->votes_down;
+            $up = $question->votes_up;
+            $down = $question->votes_down;
             return response()->json(['result' => $result, 'up' => $up, 'down' => $down], 200);
         }
         // if user has already voted
         if ($vote == $voteType) {
             return response()->json(['warning' => 'You can not vote twice(up or down) for same question'], 200);
         } else {
-            $questions = Question::find($questionsId);
+            $question = Question::find($questionId);
             if ($voteType == 'up') {
                 // update votes field in posts Table
-                $questionsVotesDown = $questions->votes_down;
-                $questionsVotesDown = $questionsVotesDown - 1;
-                $questions->votes_down = $questionsVotesDown;
-                $questionsVotesUp = $questions->votes_up;
-                $questionsVotesUp = $questionsVotesUp + 1;
-                $questions->votes_up = $questionsVotesUp;
-                $result = $questionsVotesUp - $questionsVotesDown;
-                $questions->result = $result;
-                $questions->update();
+                $questionVotesDown = $question->votes_down;
+                $questionVotesDown = $questionVotesDown - 1;
+                $question->votes_down = $questionVotesDown;
+                $questionVotesUp = $question->votes_up;
+                $questionVotesUp = $questionVotesUp + 1;
+                $question->votes_up = $questionVotesUp;
+                $result = $questionVotesUp - $questionVotesDown;
+                $question->result = $result;
+                $question->update();
                 DB::table('votes')->where([
                     ['user_id', "=", $request['userId']],
-                    ['questions_id', "=", $request['questionsId']]
+                    ['question_id', "=", $request['questionId']]
                 ])->update(['vote_type' => $voteType]);
             } else {
                 // update votes field in posts Table
-                $questionsVotesUp = $questions->votes_up;
-                $questionsVotesUp = $questionsVotesUp - 1;
-                $questions->votes_up = $questionsVotesUp;
-                $questionsVotesDown = $questions->votes_down;
-                $postVotesDown = $questionsVotesDown + 1;
-                $questions->votes_down = $postVotesDown;
-                $result = $questionsVotesUp - $questionsVotesDown;
-                $questions->result = $result;
-                $questions->update();
+                $questionVotesUp = $question->votes_up;
+                $questionVotesUp = $questionVotesUp - 1;
+                $question->votes_up = $questionVotesUp;
+                $questionVotesDown = $question->votes_down;
+                $postVotesDown = $questionVotesDown + 1;
+                $question->votes_down = $postVotesDown;
+                $result = $questionVotesUp - $questionVotesDown;
+                $question->result = $result;
+                $question->update();
                 DB::table('votes')->where([
                     ['user_id', "=", $request['userId']],
-                    ['questions_id', "=", $request['questionsId']]
+                    ['question_id', "=", $request['questionId']]
                 ])->update(['vote_type' => $voteType]);
             }
-            $result = $questions->votes_up - $questions->vote_down;
-            $up = $questions->votes_up;
-            $down = $questions->votes_down;
+            $result = $question->votes_up - $question->vote_down;
+            $up = $question->votes_up;
+            $down = $question->votes_down;
             return response()->json(['result' => $result, 'up' => $up, 'down' => $down], 200);
         }
 

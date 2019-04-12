@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAnswersTable extends Migration
+class CreateVotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +12,10 @@ class CreateAnswersTable extends Migration
      */
     public function up()
     {
-        Schema::create('answers', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('votes', function (Blueprint $table) {
+            $table->integer('questions_id');
             $table->integer('user_id');
-            $table->integer('question_id');
-            $table->longText('body');
-//            $table->integer('votes_count')->default(0);
+            $table->string('vote_type');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ class CreateAnswersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('answers');
+        Schema::drop('votes');
     }
 }
