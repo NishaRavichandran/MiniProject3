@@ -132,21 +132,27 @@ class QuestionController extends Controller
 
     public function vote(Request $request)
     {
-        error_log("******************************inside vote");
+        //error_log($request['userId']);
         $userId = $request['userId'];
-        $questionId = $request['questionsId'];
+        $questionId = $request['postId'];
         $voteType = $request['voteType'];
         $token = $request['_token'];
-
+        //error_log("******************************inside vote after step 1"+$request);
         // query below returns vote_type('up' or 'down') or null
-        $vote = DB::table('votes')->where([
-            ['user_id', "=", $request['userId']],
-            ['questions_id', "=", $request['questionId']]
+        $vote = \DB::table('votes')->where([
+            ['user_id', "=", $userId],
+            ['questions_id', "=", $questionId]
         ])->value('vote_type');
-
+//        $vote = DB::table('votes')->where([
+//            'user_id' => $userId,
+//            'question_id' => $questionId
+//        ]);
+            //->value('vote_type');
+     //   error_log($vote);
         // if user didn't vote
         if (!$vote) {
-            DB::table('votes')->insert([
+            error_log("**********Inside method*******");
+            \DB::table('votes')->insert([
                 'questions_id' => $questionId,
                 'user_id' => $userId,
                 'vote_type' => $voteType
@@ -160,7 +166,7 @@ class QuestionController extends Controller
                 $result = $questionVotesUp - $questionVotesDown;
                 $question->result = $result;
                 $question->update();
-            } else {
+            } else if ($voteType == "down"){
                 $questionVotesDown = $question->votes_down;
                 $questionVotesDown = $questionVotesDown + 1;
                 $question->votes_down = $questionVotesDown;
@@ -173,12 +179,13 @@ class QuestionController extends Controller
             $up = $question->votes_up;
             $down = $question->votes_down;
             return response()->json(['result' => $result, 'up' => $up, 'down' => $down], 200);
-        }
-        // if user has already voted
-        if ($vote == $voteType) {
+        }else if ($vote == $voteType) {
             return response()->json(['warning' => 'You can not vote twice(up or down) for same question'], 200);
-        } else {
+        }
+        else {
+            error_log("**********Inside else*******");
             $question = Question::find($questionId);
+            error_log($question);
             if ($voteType == 'up') {
                 // update votes field in posts Table
                 $questionVotesDown = $question->votes_down;
@@ -190,9 +197,9 @@ class QuestionController extends Controller
                 $result = $questionVotesUp - $questionVotesDown;
                 $question->result = $result;
                 $question->update();
-                DB::table('votes')->where([
-                    ['user_id', "=", $request['userId']],
-                    ['questions_id', "=", $request['questionId']]
+                \DB::table('votes')->where([
+                    ['user_id', "=", $userId],
+                    ['questions_id', "=", $questionId]
                 ])->update(['vote_type' => $voteType]);
             } else {
                 // update votes field in posts Table
@@ -205,9 +212,9 @@ class QuestionController extends Controller
                 $result = $questionVotesUp - $questionVotesDown;
                 $question->result = $result;
                 $question->update();
-                DB::table('votes')->where([
-                    ['user_id', "=", $request['userId']],
-                    ['questions_id', "=", $request['questionId']]
+                \DB::table('votes')->where([
+                    ['user_id', "=", $userId],
+                    ['questions_id', "=", $questionId]
                 ])->update(['vote_type' => $voteType]);
             }
             $result = $question->votes_up - $question->vote_down;

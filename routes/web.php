@@ -36,7 +36,7 @@ Route::patch('/questions/{question_id}/answer/{answer_id}', 'AnswerController@up
 Route::delete('/questions/{question_id}/answer/{answer_id}', 'AnswerController@destroy')->name('answers.destroy');
 
 
-Route::post('/vote', 'QuestionController@update')->name('question.update');
+Route::post('/vote', 'QuestionController@vote')->name('question.vote');
 //Route::post('/vote', [
 //    'uses' => 'QuestionController@vote',
 //    'as' => 'question.vote'

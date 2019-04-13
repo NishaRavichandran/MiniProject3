@@ -36,13 +36,18 @@
                                                 @if (Auth::user())
                                                     @if(Auth::user() != $question->user)
                                                         <div class="votes-area" data-postid="{{ $question->id }}" data-userid="{{ Auth::user()->id }}">
-                                                            <span class="vote" data-votetype="up">{{ $question->votes_up }}</span>
+
+
+                                                            <img class="voter" data-votetype="up" src="https://www.pinclipart.com/picdir/middle/77-779781_thumbs-up-svg-png-icon-free-download-423440.png" width="30" height="30">
+                                                            <span >{{ $question->votes_up }}</span><br>
 
 {{--                                                            <a class="btn btn-primary float-right" style="background-color: mediumblue" href="{{ route('question.vote', ['id' => $question->id]) }}">--}}
 {{--                                                                {{ $question->votes_up }}--}}
 {{--                                                            </a>--}}
-{{--                                                            <span>{{ $question->result }}</span>--}}
-{{--                                                            <span class="vote" data-votetype="down">{{ $question->votes_down }}</span>--}}
+                                                            <span>{{ $question->result }}</span><br>
+                                                            <img class="voter" data-votetype="down" src="https://www.pinclipart.com/picdir/middle/17-174878_thumbs-down-comments-thumbs-down-vector-png-clipart.png" width="30" height="30">
+                                                            <span>{{ $question->votes_down }}</span>
+{{--                                                            <span class="voter" data-votetype="down">{{ $question->votes_down }}</span>--}}
                                                         </div>
                                                     @endif
                                                 @else
@@ -80,8 +85,67 @@
                 </div>
             </div>
         </div>
-        <script>
-            var token = "{{ Session::token() }}";
-            {{--var url = "{{ route('vote') }}";--}}
+    </div>
+        <script type="text/javascript">
+            window.onload = function() {
+                var token = "{{ Session::token() }}";
+                var url = "{{ route('question.vote') }}";
+                var voteSpans = document.getElementsByClassName("voter");
+                //var voteSpans = document.querySelectorAll("voter");
+
+               // console.log(voteSpans.length);
+                for (var i = 0; i < voteSpans.length; i++) {
+                    //   console.log("on click");
+                    //voteSpans[i].addEventListener('click', vote, true);
+                    voteSpans[i].addEventListener('click', vote, false);
+                    // console.log(voteSpans[i]);
+                }
+
+                function vote() {
+                    console.log("something");
+                    var voteType = this.dataset.votetype;
+                    var parentDiv = this.parentNode;
+                    var postId = parentDiv.dataset.postid;
+                    var userId = parentDiv.dataset.userid;
+                    var spanClicked = this;
+
+
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            var obj = JSON.parse(xhr.responseText);
+                            console.log(obj);
+                            if ("warning" in obj) {
+                                var pWarning = document.createElement("p");
+                                pWarning.textContent = obj.warning;
+                                spanClicked.parentNode.appendChild(pWarning);
+                                setTimeout(function functionName() {
+                                    spanClicked.parentNode.removeChild(pWarning);
+                                }, 3000);
+                            }
+                            else {
+                                if (spanClicked.dataset.votetype == "up") {
+                                    spanClicked.textContent = obj.up;
+                                    spanClicked.nextElementSibling.textContent = obj.result;
+                                    spanClicked.nextElementSibling.nextElementSibling.textContent = obj.down;
+                                }
+                                else if(spanClicked.dataset.votetype == "down") {
+                                    spanClicked.textContent = obj.down;
+                                    spanClicked.previousElementSibling.textContent = obj.result;
+                                    spanClicked.previousElementSibling.previousElementSibling.textContent = obj.up;
+                                }
+                            }
+                        }
+                    }
+
+                    xhr.open('POST', url, true);
+                    xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded;");
+                    xhr.send("postId=" + postId + "&userId=" + userId + "&voteType=" + voteType + "&_token=" + token);
+                }
+
+            };
+
+
         </script>
 @endsection
