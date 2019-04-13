@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Post;
+
 use Illuminate\Http\Request;
 use App\Question;
 use Illuminate\Support\Facades\Auth;
@@ -60,7 +60,7 @@ class QuestionController extends Controller
         $question->user()->associate(Auth::user());
         $question->save();
 
-        return redirect()->route('home')->with('message', 'IT WORKS!');
+        return redirect()->route('home')->with('message', 'Your Question has been recorded!');
 
 
         // return redirect()->route('questions.show', ['id' => $question->id]);
@@ -101,7 +101,7 @@ class QuestionController extends Controller
      */
     public function update(Request $request, Question $question)
     {
-
+        error_log("******************************inside update");
         $input = $request->validate([
             'body' => 'required|min:5',
         ], [
@@ -132,21 +132,22 @@ class QuestionController extends Controller
 
     public function vote(Request $request)
     {
+        error_log("******************************inside vote");
         $userId = $request['userId'];
-        $questionId = $request['questionId'];
+        $questionId = $request['questionsId'];
         $voteType = $request['voteType'];
         $token = $request['_token'];
 
         // query below returns vote_type('up' or 'down') or null
         $vote = DB::table('votes')->where([
             ['user_id', "=", $request['userId']],
-            ['question_id', "=", $request['questionId']]
+            ['questions_id', "=", $request['questionId']]
         ])->value('vote_type');
 
         // if user didn't vote
         if (!$vote) {
             DB::table('votes')->insert([
-                'question_id' => $questionId,
+                'questions_id' => $questionId,
                 'user_id' => $userId,
                 'vote_type' => $voteType
             ]);
@@ -191,7 +192,7 @@ class QuestionController extends Controller
                 $question->update();
                 DB::table('votes')->where([
                     ['user_id', "=", $request['userId']],
-                    ['question_id', "=", $request['questionId']]
+                    ['questions_id', "=", $request['questionId']]
                 ])->update(['vote_type' => $voteType]);
             } else {
                 // update votes field in posts Table
@@ -206,7 +207,7 @@ class QuestionController extends Controller
                 $question->update();
                 DB::table('votes')->where([
                     ['user_id', "=", $request['userId']],
-                    ['question_id', "=", $request['questionId']]
+                    ['questions_id', "=", $request['questionId']]
                 ])->update(['vote_type' => $voteType]);
             }
             $result = $question->votes_up - $question->vote_down;

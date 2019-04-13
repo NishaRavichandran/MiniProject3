@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -31,11 +32,16 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $questionsTest = Question::all();
-        $questions = $user->questions()->paginate(6);
+       // $questionsTest->sortByDesc('created_at');
+        //$questionsTest = $questionsTest->sortByDesc('created_at');
 
-       // dd($questions);
-//        dd($questionsTest);
-        //dd($questions);
+        $sorted = $questionsTest->sortByDesc('created_at');
+
+        $questionsTest = $sorted->values()->all();
+
+
+        //$questions = $user->questions()->paginate(6);
+
         $questionsTest = $this->paginate($questionsTest);
         return view('home')->with('questions', $questionsTest);
     }

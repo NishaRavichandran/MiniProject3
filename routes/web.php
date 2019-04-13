@@ -18,6 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/userQuestions', 'UserQuestionsController@index')->name('userQuestions');
 
 
 Route::get('/user/{user_id}/profile', 'ProfileController@create')->name('profile.create');
@@ -35,11 +36,11 @@ Route::patch('/questions/{question_id}/answer/{answer_id}', 'AnswerController@up
 Route::delete('/questions/{question_id}/answer/{answer_id}', 'AnswerController@destroy')->name('answers.destroy');
 
 
-
-Route::post('vote', [
-    'uses' => 'QuestionsController@vote',
-    'as' => 'vote'
-]);
+Route::post('/vote', 'QuestionController@update')->name('question.update');
+//Route::post('/vote', [
+//    'uses' => 'QuestionController@vote',
+//    'as' => 'question.vote'
+//]);
 
 Route::resources([
     'question' => 'QuestionController',
