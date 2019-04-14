@@ -46,3 +46,10 @@ Route::post('/vote', 'QuestionController@vote')->name('question.vote');
 Route::resources([
     'question' => 'QuestionController',
 ]);
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
