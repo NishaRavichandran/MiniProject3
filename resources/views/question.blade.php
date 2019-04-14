@@ -11,17 +11,22 @@
 
                         {{$question->body}}
                     </div>
-                    <div class="card-footer">
-                        <a class="btn btn-primary float-right" style="background-color: mediumblue"
-                           href="{{ route('question.edit',['id'=> $question->id])}}">
-                            Edit Question
-                        </a>
+                    @if (Auth::user())
+                        @if(Auth::user() == $question->user)
+                            <div class="card-footer">
+                                <a class="btn btn-primary float-right" style="background-color: mediumblue"
+                                   href="{{ route('question.edit',['id'=> $question->id])}}">
+                                    Edit Question
+                                </a>
 
-                        {{ Form::open(['method'  => 'DELETE', 'route' => ['question.destroy', $question->id]])}}
-                        <button class="btn btn-danger float-right mr-2" value="submit" type="submit" id="submit">Delete
-                        </button>
-                        {!! Form::close() !!}
-                    </div>
+                                {{ Form::open(['method'  => 'DELETE', 'route' => ['question.destroy', $question->id]])}}
+                                <button class="btn btn-danger float-right mr-2" value="submit" type="submit" id="submit">Delete
+                                </button>
+                                {!! Form::close() !!}
+                            </div>
+                        @endif
+                    @endif
+
                 </div>
             </div>
 

@@ -28,15 +28,18 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $questionsTest = Question::all();
        // $questionsTest->sortByDesc('created_at');
         //$questionsTest = $questionsTest->sortByDesc('created_at');
-
-        $sorted = $questionsTest->sortByDesc('created_at');
-
+        $sort = $request->input('sort');
+        if($sort==null)
+            $sorted = $questionsTest->sortByDesc('created_at');
+        else
+            $sorted = $questionsTest->sortByDesc('created_at');
+        $sorted = $questionsTest->sortByDesc($sort);
         $questionsTest = $sorted->values()->all();
 
 

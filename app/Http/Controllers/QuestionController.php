@@ -175,7 +175,10 @@ class QuestionController extends Controller
                 $question->result = $result;
                 $question->update();
             }
-            $result = $question->votes_up - $question->votes_down;
+//            \DB::table('questions')->where([
+//                ['questions_id', "=", $questionId]
+//            ])->update(['result' => $question->result]);
+            //$result = $question->votes_up - $question->votes_down;
             $up = $question->votes_up;
             $down = $question->votes_down;
             return response()->json(['result' => $result, 'up' => $up, 'down' => $down], 200);
@@ -207,9 +210,13 @@ class QuestionController extends Controller
                 $questionVotesUp = $questionVotesUp - 1;
                 $question->votes_up = $questionVotesUp;
                 $questionVotesDown = $question->votes_down;
-                $postVotesDown = $questionVotesDown + 1;
-                $question->votes_down = $postVotesDown;
+                $questionVotesDown = $questionVotesDown + 1;
+                $question->votes_down = $questionVotesDown;
+
+                error_log($question->votes_up);
+                error_log($question->votes_down);
                 $result = $questionVotesUp - $questionVotesDown;
+                error_log($result);
                 $question->result = $result;
                 $question->update();
                 \DB::table('votes')->where([
@@ -217,7 +224,7 @@ class QuestionController extends Controller
                     ['questions_id', "=", $questionId]
                 ])->update(['vote_type' => $voteType]);
             }
-            $result = $question->votes_up - $question->vote_down;
+            //$result = $question->votes_up - $question->vote_down;
             $up = $question->votes_up;
             $down = $question->votes_down;
             return response()->json(['result' => $result, 'up' => $up, 'down' => $down], 200);
