@@ -34,18 +34,24 @@ class HomeController extends Controller
         $questionsTest = Question::all();
        // $questionsTest->sortByDesc('created_at');
         //$questionsTest = $questionsTest->sortByDesc('created_at');
+        $url = "/home";
         $sort = $request->input('sort');
-        if($sort==null)
+        if($sort==null){
             $sorted = $questionsTest->sortByDesc('created_at');
-        else
+        }
+
+        else{
             $sorted = $questionsTest->sortByDesc('created_at');
+            $url = $url."?sort=result";
+        }
+
         $sorted = $questionsTest->sortByDesc($sort);
         $questionsTest = $sorted->values()->all();
 
 
         //$questions = $user->questions()->paginate(6);
 
-        $questionsTest = $this->paginate($questionsTest);
+        $questionsTest = $this->paginate($questionsTest,9,null,$url);
         return view('home')->with('questions', $questionsTest);
     }
 
