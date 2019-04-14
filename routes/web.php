@@ -38,6 +38,8 @@ Route::delete('/questions/{question_id}/answer/{answer_id}', 'AnswerController@d
 
 
 Route::post('/vote', 'QuestionController@vote')->name('question.vote');
+
+Route::post('/answervote', 'AnswerController@vote')->name('answer.vote');
 //Route::post('/vote', [
 //    'uses' => 'QuestionController@vote',
 //    'as' => 'question.vote'

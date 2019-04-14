@@ -124,4 +124,108 @@ class AnswerController extends Controller
         return redirect()->route('question.show',['question_id' => $question])->with('message', 'Your Message has been Deleted');
 
     }
+    public function vote(Request $request)
+    {
+        error_log($request);
+        $userId = $request['userId'];
+       // $questionId = $request['postId'];
+        $answerId = $request['answerId'];
+        $voteType = $request['voteType'];
+        $token = $request['_token'];
+        //error_log("******************************inside vote after step 1"+$request);
+        // query below returns vote_type('up' or 'down') or null
+        $vote = \DB::table('answervotes')->where([
+            ['user_id', "=", $userId],
+//            ['question_id', "=", $questionId],
+            ['answer_id', "=", $answerId]
+        ])->value('vote_type');
+//        $vote = DB::table('votes')->where([
+//            'user_id' => $userId,
+//            'question_id' => $questionId
+//        ]);
+        //->value('vote_type');
+        //   error_log($vote);
+        // if user didn't vote
+        if (!$vote) {
+            error_log("**********Inside method*******");
+            \DB::table('answervotes')->insert([
+//                'question_id' => $questionId,
+                'user_id' => $userId,
+                'answer_id' => $answerId,
+                'vote_type' => $voteType
+            ]);
+            $answer = Answer::find($answerId);
+            if ($voteType == "up") {
+                $answerVotesUp = $answer->votes_up;
+                $answerVotesUp = $answerVotesUp + 1;
+                $answer->votes_up = $answerVotesUp;
+                $answerVotesDown = $answer->votes_down;
+                $answerresult = $answerVotesUp - $answerVotesDown;
+                $answer->answer_result = $answerresult;
+                $answer->update();
+            } else if ($voteType == "down"){
+                $answerVotesDown = $answer->votes_down;
+                $answerVotesDown = $answerVotesDown + 1;
+                $answer->votes_down = $answerVotesDown;
+                $answerVotesUp = $answer->votes_up;
+                $answerresult = $answerVotesUp - $answerVotesDown;
+                $answer-> answer_result = $answerresult;
+                $answer->update();
+            }
+//            \DB::table('questions')->where([
+//                ['questions_id', "=", $questionId]
+//            ])->update(['result' => $question->result]);
+            //$result = $question->votes_up - $question->votes_down;
+            $up = $answer->votes_up;
+            $down = $answer->votes_down;
+            return response()->json(['result' => $answerresult, 'up' => $up, 'down' => $down], 200);
+        }else if ($vote == $voteType) {
+            return response()->json(['warning' => 'You can not vote twice(up or down) for same question'], 200);
+        }
+        else {
+            error_log("**********Inside else*******");
+            $answer = Answer::find($answerId);
+            error_log($answer);
+            if ($voteType == 'up') {
+                // update votes field in posts Table
+                $answerVotesDown = $answer->votes_down;
+                $answerVotesDown = $answerVotesDown - 1;
+                $answer->votes_down = $answerVotesDown;
+                $answerVotesUp = $answer->votes_up;
+                $answerVotesUp = $answerVotesUp + 1;
+                $answer->votes_up = $answerVotesUp;
+                $result = $answerVotesUp - $answerVotesDown;
+                $answer->answer_result = $result;
+                $answer->update();
+                \DB::table('answervotes')->where([
+                    ['user_id', "=", $userId],
+//                    ['question_id', "=", $questionId],
+                    ['answer_id', "=", $answerId]
+                ])->update(['vote_type' => $voteType]);
+            } else {
+                // update votes field in posts Table
+                $answerVotesUp = $answer->votes_up;
+                $answerVotesUp = $answerVotesUp - 1;
+                $answer->votes_up = $answerVotesUp;
+                $answerVotesDown = $answer->votes_down;
+                $answerVotesDown = $answerVotesDown + 1;
+                $answer->votes_down = $answerVotesDown;
+                error_log($answer->votes_up);
+                error_log($answer->votes_down);
+                $result = $answerVotesUp - $answerVotesDown;
+                error_log($result);
+                $answer->answer_result = $result;
+                $answer->update();
+                \DB::table('answervotes')->where([
+                    ['user_id', "=", $userId],
+//                    ['question_id', "=", $questionId],
+                    ['answer_id', "=", $answerId]
+                ])->update(['vote_type' => $voteType]);
+            }
+            //$result = $question->votes_up - $question->vote_down;
+            $up = $answer->votes_up;
+            $down = $answer->votes_down;
+            return response()->json(['result' => $result, 'up' => $up, 'down' => $down], 200);
+        }
+    }
 }
