@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md" style="color: #1d2124">
-                    <img src="https://cdn.searchenginejournal.com/wp-content/uploads/2018/09/25-of-the-Best-Examples-of-Effective-FAQ-Pages-760x400.png" width="1800" height="1000">
+                    <img src="https://cdn.searchenginejournal.com/wp-content/uploads/2018/09/25-of-the-Best-Examples-of-Effective-FAQ-Pages-760x400.png" width="1600" height="1000">
                 </div>
 
 {{--                <div class="links">--}}
