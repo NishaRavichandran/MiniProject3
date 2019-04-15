@@ -31,9 +31,11 @@ The feature allows only the authorized users should be able to edit/delete quest
 A voting feature is added for questions/answers.
 
 ## User Story
-1.	As a User, I should be able to vote for questions, so that I can judge/understand whether the question was helpful/good/meaningful.
-2.	As a User, I should be able to vote for answers, so that I can judge/understand whether the answer was helpful/good/meaningful/relevant.
-3.	As a User, I should be able to sort the questions, so that I can view the top-rated questions first.
+1.	As a User, I should be able to Upvote for questions, so that I can judge whether the question was good/meaningful.
+2.	As a User, I should be able to Downvote for questions, so that I can judge/understand whether the question was helpful.
+3.	As a User, I should be able to Upvote for answers, so that I can judge whether the answer was helpful/good/meaningful/relevant.
+4.	As a User, I should be able to Upvote for answers, so that I can judge whether the answer was irrelevant.
+5.	As a User, I should be able to sort the questions, so that I can view the top-rated questions first.
 
 ## Features
 1.	Asking questions
@@ -46,7 +48,7 @@ A voting feature is added for questions/answers.
 3.	Added created by option for questions/answers which displays name/mailId of user
 4.	Voting up/down for questions
 5.	Voting up/down for answers
-6.	Questions sorted based on votes(top-rated)
+6.	Questions sorted based on votes(upvote-downvote=results)
 7.	Able to edit only the question added by the user
 8.	Able to edit only the answer added by the user
 9.	Not able to edit the question added by other users
