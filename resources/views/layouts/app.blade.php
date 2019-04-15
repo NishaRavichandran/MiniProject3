@@ -27,7 +27,7 @@
 
 
             @guest
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" style="color: #fefefe" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
             @else
@@ -53,11 +53,11 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->                    @guest
 
-                        <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
-                        <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
+                        <li><a class="nav-link" style="color: #fefefe" href="{{ route('login') }}">{{ __('Login') }}</a></li>
+                        <li><a class="nav-link" style="color: #fefefe" href="{{ route('register') }}">{{ __('Register') }}</a></li>
                     @else
                         <li></li><a class="navbar-brand" style="color: #fefefe" href="{{ route('userQuestions') }}">
-                            User Questions
+                            Your Questions
                         </a></li>
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" style="color: #fefefe" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
